@@ -2,7 +2,8 @@
 let
   opensslBin = "${lib.getBin openssl}/bin/openssl";
   pwgenBin = "${lib.getBin pwgen}/bin/pwgen";
-in writeScriptBin "bbb-generate-secrets" ''
+in
+writeScriptBin "bbb-generate-secrets" ''
   set -eu
 
   # https://github.com/bigbluebutton/docker/blob/master/setup.sh#L142

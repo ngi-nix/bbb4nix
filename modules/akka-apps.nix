@@ -3,13 +3,14 @@
   bbbLib = import ./lib.nix { inherit pkgs lib; };
 
   configFile = bbbLib.mkHoconFile "bbb-akka-apps.conf" cfg.config;
-in {
+in
+{
   options.services.bigbluebutton.akka-apps = with types; {
     enable = mkEnableOption "the Apps component";
 
     config = mkOption {
       description = "Apps configuration. This will be merged with the configuration from /var/lib/secrets/bigbluebutton/bbb-akka-apps.conf.";
-      default = {};
+      default = { };
       type = bbbLib.hoconType;
     };
   };

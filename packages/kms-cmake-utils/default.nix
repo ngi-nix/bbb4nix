@@ -1,7 +1,9 @@
-{ stdenv, lib, callPackage, cmake }: let
-  src = callPackage ../sources/kms-cmake-utils {};
+{ stdenv, lib, callPackage, cmake }:
+let
+  src = callPackage ../sources/kms-cmake-utils { };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "kms-cmake-utils";
   inherit (src) version;
 

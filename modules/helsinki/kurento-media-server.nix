@@ -4,22 +4,26 @@ let
   bbbLib = import ../lib.nix { inherit pkgs lib; };
 
   logConfig = "${toString cfg.defaultLogLevel}"
-    + optionalString (cfg.logLevels != {}) ("," + (concatStringsSep "," (mapAttrsToList (k: v: "${k}:${toString v}") cfg.logLevels)));
+    + optionalString (cfg.logLevels != { }) ("," + (concatStringsSep "," (mapAttrsToList (k: v: "${k}:${toString v}") cfg.logLevels)));
 
   configDir = pkgs.symlinkJoin {
     name = "kurento-etc";
     paths = [
       (pkgs.writeTextDir "kurento.conf.json" (builtins.toJSON {
-          mediaServer = cfg.mediaServerConfig;
+        mediaServer = cfg.mediaServerConfig;
       }))
-    ] ++ mapAttrsToList (n: v: pkgs.writeTextDir
-      "modules/kurento/${n}.conf.json"
-      (builtins.toJSON v)
-    ) cfg.jsonModuleConfigs
-    ++ mapAttrsToList (n: v: pkgs.writeTextDir
-      "modules/kurento/${n}.conf.ini"
-      (concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${toString v}") v))
-    ) cfg.iniModuleConfigs;
+    ] ++ mapAttrsToList
+      (n: v: pkgs.writeTextDir
+        "modules/kurento/${n}.conf.json"
+        (builtins.toJSON v)
+      )
+      cfg.jsonModuleConfigs
+    ++ mapAttrsToList
+      (n: v: pkgs.writeTextDir
+        "modules/kurento/${n}.conf.ini"
+        (concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${toString v}") v))
+      )
+      cfg.iniModuleConfigs;
   };
 
   gstPluginDir = pkgs.symlinkJoin {
@@ -27,7 +31,8 @@ let
     paths = cfg.modules ++ (with pkgs.kurentoPackages.gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad pkgs.libnice.out ]);
   };
 
-in {
+in
+{
   options.services.kurento-media-server = with types; {
     enable = mkEnableOption "Kurento Media Server";
 

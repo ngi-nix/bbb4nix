@@ -54,20 +54,21 @@
   pkg = pkgs.bbbPackages.web.override {
     turnStunServers = "file:/run/bbb-web/turn-stun-servers.xml";
   };
-in {
+in
+{
   options.services.bigbluebutton.web = with types; {
     enable = mkEnableOption "the BigBlueButton core web component";
 
     config = mkOption {
       description = "Extra config overrides for bbb-web";
       type = attrsOf (oneOf [ int str bool ]);
-      default = {};
+      default = { };
     };
 
     akkaConfig = mkOption {
       description = "Extra config for AKKA";
       type = bbbLib.hoconType;
-      default = {};
+      default = { };
     };
 
     port = mkOption {
@@ -79,7 +80,7 @@ in {
     extraArgs = mkOption {
       description = "Extra options to pass to bbb-web";
       type = listOf str;
-      default = [];
+      default = [ ];
     };
 
     stunServers = mkOption {
@@ -91,7 +92,7 @@ in {
     iceCandidates = mkOption {
       description = "List of ICE candidates to configure";
       type = listOf str;
-      default = [];
+      default = [ ];
     };
 
     turnServers = mkOption {
@@ -101,7 +102,7 @@ in {
         The secrets are read from /var/lib/secrets/bigbluebutton/bbb-web-turn with
         one secret per line in the same order they are set here.
       '';
-      default = [];
+      default = [ ];
       type = listOf (submodule ({ ... }: {
         options = {
           url = mkOption {
@@ -295,6 +296,6 @@ in {
       group = "bbb-web";
       isSystemUser = true;
     };
-    users.groups.bbb-web = {};
+    users.groups.bbb-web = { };
   };
 }

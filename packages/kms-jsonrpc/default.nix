@@ -1,7 +1,9 @@
-{ stdenv, lib, callPackage, cmake, pkg-config, boost }: let
-  src = callPackage ../sources/kms-jsonrpc {};
+{ stdenv, lib, callPackage, cmake, pkg-config, boost }:
+let
+  src = callPackage ../sources/kms-jsonrpc { };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "kms-jsonrpc";
   inherit (src) version;
 
@@ -10,10 +12,10 @@ in stdenv.mkDerivation {
   nativeBuildInputs = [ cmake pkg-config ];
   buildInputs = [
     boost
-    (callPackage ../kmsjsoncpp {})
+    (callPackage ../kmsjsoncpp { })
   ];
-  cmakeFlagsArray = (callPackage ../kurento-media-server/lib.nix {}).mkCmakeModules [
-    (callPackage ../kms-cmake-utils {})
+  cmakeFlagsArray = (callPackage ../kurento-media-server/lib.nix { }).mkCmakeModules [
+    (callPackage ../kms-cmake-utils { })
   ];
 
   meta = with lib; {

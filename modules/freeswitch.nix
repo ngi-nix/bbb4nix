@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }: with lib; let
   cfg = config.services.bigbluebutton.freeswitch;
 
-in {
+in
+{
   options.services.bigbluebutton.freeswitch = with types; {
     enable = mkEnableOption "FreeSWITCH and configure it for BigBlueButton";
 

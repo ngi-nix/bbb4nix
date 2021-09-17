@@ -3,7 +3,8 @@
   rubyEnv = pkgs.bbbPackages.greenlight + "/env";
   secretEnv = "/var/lib/secrets/bbb-greenlight/env";
   path = with pkgs; [ rubyEnv nodejs coreutils gnugrep ];
-in {
+in
+{
   options.services.bigbluebutton.greenlight = with types; {
     enable = mkEnableOption "the BBB greenlight service";
 
@@ -31,7 +32,7 @@ in {
     environment = mkOption {
       description = "Environment variables, merged with defaults for systemd service";
       type = attrsOf (nullOr (oneOf [ str path package ]));
-      default = {};
+      default = { };
     };
   };
 

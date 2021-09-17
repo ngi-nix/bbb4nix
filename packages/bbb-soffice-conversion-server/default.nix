@@ -10,9 +10,10 @@ let
   };
 
   libreoffice = libreoffice-still-unwrapped.overrideAttrs (oA: {
-    patches = oA.patches or [] ++ [ "${src}/libreoffice.patch" ];
+    patches = oA.patches or [ ] ++ [ "${src}/libreoffice.patch" ];
   });
-in buildGoModule {
+in
+buildGoModule {
   inherit pname src;
 
   version = "unstable-2021-07-14";

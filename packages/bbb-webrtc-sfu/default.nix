@@ -1,8 +1,20 @@
-{ stdenv, lib, callPackage, makeWrapper, nodePackages, nix-gitignore
-, python, util-linux, runCommand, writeTextFile, nodejs, darwin
-, fetchurl, fetchgit }:
+{ stdenv
+, lib
+, callPackage
+, makeWrapper
+, nodePackages
+, nix-gitignore
+, python
+, util-linux
+, runCommand
+, writeTextFile
+, nodejs
+, darwin
+, fetchurl
+, fetchgit
+}:
 let
-  src = callPackage ../sources/bbb-webrtc-sfu {};
+  src = callPackage ../sources/bbb-webrtc-sfu { };
 
   nodeEnv = import ../x2nix/node-env.nix {
     inherit stdenv lib nodejs python util-linux runCommand writeTextFile;
@@ -13,7 +25,8 @@ let
     inherit stdenv lib nodeEnv fetchurl fetchgit nix-gitignore;
     globalBuildInputs = with nodePackages; [ node-gyp-build ];
   };
-in nodeEnv.buildNodePackage (_nodePackages.args // {
+in
+nodeEnv.buildNodePackage (_nodePackages.args // {
   inherit src;
 
   nativeBuildInputs = [ makeWrapper ];

@@ -1,7 +1,9 @@
-{ stdenvNoCC, callPackage }: let
-  src = callPackage ../sources/bigbluebutton {};
+{ stdenvNoCC, callPackage }:
+let
+  src = callPackage ../sources/bigbluebutton { };
 
-in stdenvNoCC.mkDerivation {
+in
+stdenvNoCC.mkDerivation {
   pname = "bbb-record-and-playback-presentations";
   inherit (src) version;
 

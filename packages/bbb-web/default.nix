@@ -1,9 +1,17 @@
-{ callPackage, unzip, jre8_headless, turnStunServers ? "turn-stun-servers.xml",
- runCommand, curl, runtimeShell }: let
-  buildGradle = callPackage ../x2nix/gradle-env.nix {};
-  src = callPackage ../sources/bigbluebutton {};
+{ callPackage
+, unzip
+, jre8_headless
+, turnStunServers ? "turn-stun-servers.xml"
+, runCommand
+, curl
+, runtimeShell
+}:
+let
+  buildGradle = callPackage ../x2nix/gradle-env.nix { };
+  src = callPackage ../sources/bigbluebutton { };
 
-in buildGradle {
+in
+buildGradle {
   envSpec = ./gradle-env.json;
   pname = "bbb-web";
   inherit (src) version;

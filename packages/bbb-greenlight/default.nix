@@ -1,7 +1,22 @@
-{ stdenv, lib, callPackage, bundlerEnv, defaultGemConfig, ruby, rubyPackages, makeWrapper, dockerignored, nodejs, yarn
-, pkg-config, zlib, libxml2, libxslt, shared-mime-info, cacert }:
+{ stdenv
+, lib
+, callPackage
+, bundlerEnv
+, defaultGemConfig
+, ruby
+, rubyPackages
+, makeWrapper
+, nodejs
+, yarn
+, pkg-config
+, zlib
+, libxml2
+, libxslt
+, shared-mime-info
+, cacert
+}:
 let
-  src = callPackage ../sources/bbb-greenlight {};
+  src = callPackage ../sources/bbb-greenlight { };
   inherit (src) version;
   rubyEnv = bundlerEnv rec {
     name = "bbb-greenlight-env-${version}";
@@ -17,11 +32,12 @@ let
       };
       mimemagic = oA: {
         buildInputs = with rubyPackages; [ rake ];
-        FREEDESKTOP_MIME_TYPES_PATH="${shared-mime-info}/share/mime/packages/freedesktop.org.xml";
+        FREEDESKTOP_MIME_TYPES_PATH = "${shared-mime-info}/share/mime/packages/freedesktop.org.xml";
       };
     };
   };
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "bbb-greenlight";
   inherit version;
   inherit src;
@@ -30,7 +46,7 @@ in stdenv.mkDerivation {
     sed -i 's#|| @shared_room##' app/controllers/concerns/joiner.rb
   '';
 
-  nativeBuildInputs = [ makeWrapper dockerignored rubyEnv nodejs yarn ];
+  nativeBuildInputs = [ makeWrapper rubyEnv nodejs yarn ];
   buildPhase = ''
     export SSL_CERT_FILE=${cacert}/etc/ssl/certs/ca-bundle.crt  # needed for omniauth-twitter -.-
     rake assets:precompile RAILS_ENV=production SECRET_KEY_BASE=NOUKTHXBYE
@@ -59,8 +75,8 @@ in stdenv.mkDerivation {
 
   meta = with lib; {
     description = "A really simple end-user interface for your BigBlueButton server";
-    homepage    = "https://github.com/bigbluebutton/greenlight/";
-    license     = with licenses; lgpl3;
+    homepage = "https://github.com/bigbluebutton/greenlight/";
+    license = with licenses; lgpl3;
     maintainers = with maintainers; [ ajs124 ];
   };
 }

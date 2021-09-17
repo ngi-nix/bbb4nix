@@ -1,7 +1,8 @@
 { config, lib, ... }: with lib;
 let
   cfg = config.services.bigbluebutton.mongodb;
-in {
+in
+{
   options.services.bigbluebutton.mongodb = {
     enable = mkEnableOption "MongoDB and configure it for BBB";
   };

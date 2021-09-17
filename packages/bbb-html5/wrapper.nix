@@ -1,7 +1,9 @@
-{ stdenvNoCC, makeWrapper, callPackage }: let
-  meteor = callPackage ../sources/meteor {};
-  src = callPackage ./. {};
-in stdenvNoCC.mkDerivation {
+{ stdenvNoCC, makeWrapper, callPackage }:
+let
+  meteor = callPackage ../sources/meteor { };
+  src = callPackage ./. { };
+in
+stdenvNoCC.mkDerivation {
   pname = "bbb-html5-wrapper";
   inherit (src) version;
   inherit src;

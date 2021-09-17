@@ -1,7 +1,9 @@
-{ stdenv, lib, callPackage, cmake }: let
-  src = callPackage ../sources/libsrtp-kurento {};
+{ stdenv, lib, callPackage, cmake }:
+let
+  src = callPackage ../sources/libsrtp-kurento { };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "libsrtp-kurento";
   inherit (src) version;
 

@@ -8,7 +8,7 @@ stdenvNoCC.mkDerivation {
   dontBuild = true;
   dontFixup = true;
 
-  src = callPackage ./raw-source.nix {};
+  src = callPackage ./raw-source.nix { };
 
   nativeBuildInputs = [ dpkg ];
 

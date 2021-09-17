@@ -33,8 +33,9 @@
 , gradleFlags ? [ "build" ]
 , gradlePackage ? null
 , enableDebug ? false
-, extraDeps ? []
-, ... } @ args:
+, extraDeps ? [ ]
+, ...
+} @ args:
 
 let
   inherit (builtins)
@@ -73,42 +74,45 @@ let
             isNewerRelease =
               !(hasSuffix "-SNAPSHOT" id.version) &&
               versionOlder meta.release id.version;
-          in {
+          in
+          {
             groupId = id.group;
             artifactId = id.name;
             latest = if isNewer then id.version else meta.latest;
             release = if isNewerRelease then id.version else meta.release;
-            versions = meta.versions ++ [id.version];
+            versions = meta.versions ++ [ id.version ];
           }
         )
         {
           latest = "";
           release = "";
-          versions = [];
+          versions = [ ];
         }
         (id: "${replaceStrings ["."] ["/"] id.group}/${id.name}/maven-metadata.xml")
         ids;
 
     in
-      attrValues (mapAttrs (path: meta:
+    attrValues (mapAttrs
+      (path: meta:
         let
           versions' = sort versionOlder (unique meta.versions);
         in
-          with meta; writeTextDir path ''
-            <?xml version="1.0" encoding="UTF-8"?>
-            <metadata modelVersion="1.1">
-              <groupId>${groupId}</groupId>
-              <artifactId>${artifactId}</artifactId>
-              <versioning>
-                ${optionalString (latest != "") "<latest>${latest}</latest>"}
-                ${optionalString (release != "") "<release>${release}</release>"}
-                <versions>
-                  ${concatMapStringsSep "\n    " (v: "<version>${v}</version>") versions'}
-                </versions>
-              </versioning>
-            </metadata>
-          ''
-      ) modules);
+        with meta; writeTextDir path ''
+          <?xml version="1.0" encoding="UTF-8"?>
+          <metadata modelVersion="1.1">
+            <groupId>${groupId}</groupId>
+            <artifactId>${artifactId}</artifactId>
+            <versioning>
+              ${optionalString (latest != "") "<latest>${latest}</latest>"}
+              ${optionalString (release != "") "<release>${release}</release>"}
+              <versions>
+                ${concatMapStringsSep "\n    " (v: "<version>${v}</version>") versions'}
+              </versions>
+            </versioning>
+          </metadata>
+        ''
+      )
+      modules);
 
   mkSnapshotMetadata = deps:
     let
@@ -120,17 +124,19 @@ let
             id = dep.id;
             isNewer = dep.build > meta.buildNumber;
             # Timestamp values can be bogus, e.g. jitpack.io
-            updated = if (match "[0-9]{8}\.[0-9]{6}" dep.timestamp) != null
-                      then replaceStrings ["."] [""] dep.timestamp
-                      else "";
-          in {
+            updated =
+              if (match "[0-9]{8}\.[0-9]{6}" dep.timestamp) != null
+              then replaceStrings [ "." ] [ "" ] dep.timestamp
+              else "";
+          in
+          {
             groupId = id.group;
             artifactId = id.name;
             version = id.version;
             timestamp = if isNewer then dep.timestamp else meta.timestamp;
             buildNumber = if isNewer then dep.build else meta.buildNumber;
             lastUpdated = if isNewer then updated else meta.lastUpdated;
-            versions = meta.versions or [] ++ [{
+            versions = meta.versions or [ ] ++ [{
               classifier = id.classifier or "";
               extension = id.extension;
               value = "${removeSuffix "-SNAPSHOT" id.version}-${dep.timestamp}-${toString dep.build}";
@@ -156,7 +162,8 @@ let
       '';
 
     in
-      attrValues (mapAttrs (path: meta:
+    attrValues (mapAttrs
+      (path: meta:
         with meta; writeTextDir path ''
           <?xml version="1.0" encoding="UTF-8"?>
           <metadata modelVersion="1.1">
@@ -175,7 +182,8 @@ let
             </versioning>
           </metadata>
         ''
-      ) modules);
+      )
+      modules);
 
   mkRepo = project: type: deps: buildEnv {
     name = "${project}-gradle-${type}-env";
@@ -187,43 +195,43 @@ let
       repos = mapAttrs (mkRepo projectSpec.name) projectSpec.dependencies;
       allRepos = mkRepo projectSpec.name "combined" (with projectSpec.dependencies; plugin ++ buildscript ++ project);
     in
-      writeText "init.gradle" ''
-        static def offlineRepo(RepositoryHandler repositories, String env, String path) {
-            repositories.clear()
-            repositories.maven {
-                name "Nix''${env.capitalize()}MavenOffline"
-                url path
-                metadataSources {
-                    it.gradleMetadata()
-                    it.mavenPom()
-                    it.artifact()
-                }
-            }
-            repositories.ivy {
-                name "Nix''${env.capitalize()}IvyOffline"
-                url path
-                layout "maven"
-                metadataSources {
-                    it.gradleMetadata()
-                    it.ivyDescriptor()
-                    it.artifact()
-                }
-            }
-        }
+    writeText "init.gradle" ''
+      static def offlineRepo(RepositoryHandler repositories, String env, String path) {
+          repositories.clear()
+          repositories.maven {
+              name "Nix''${env.capitalize()}MavenOffline"
+              url path
+              metadataSources {
+                  it.gradleMetadata()
+                  it.mavenPom()
+                  it.artifact()
+              }
+          }
+          repositories.ivy {
+              name "Nix''${env.capitalize()}IvyOffline"
+              url path
+              layout "maven"
+              metadataSources {
+                  it.gradleMetadata()
+                  it.ivyDescriptor()
+                  it.artifact()
+              }
+          }
+      }
 
-        gradle.settingsEvaluated {
-            offlineRepo(it.pluginManagement.repositories, "plugin", "${allRepos}")
-        }
+      gradle.settingsEvaluated {
+          offlineRepo(it.pluginManagement.repositories, "plugin", "${allRepos}")
+      }
 
-        gradle.projectsLoaded {
-            allprojects {
-                buildscript {
-                    offlineRepo(repositories, "buildscript", "${allRepos}")
-                }
-                offlineRepo(repositories, "project", "${allRepos}")
-            }
-        }
-      '';
+      gradle.projectsLoaded {
+          allprojects {
+              buildscript {
+                  offlineRepo(repositories, "buildscript", "${allRepos}")
+              }
+              offlineRepo(repositories, "project", "${allRepos}")
+          }
+      }
+    '';
 
   mkGradle = gradleSpec:
     gradleGen.gradleGen {
@@ -250,11 +258,12 @@ let
   pname = args.pname or projectEnv.name;
   version = args.version or projectEnv.version;
 
-in stdenv.mkDerivation (args // {
+in
+stdenv.mkDerivation (args // {
 
   inherit pname version;
 
-  nativeBuildInputs = (args.nativeBuildInputs or []) ++ [ projectEnv.gradle ];
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ projectEnv.gradle ];
 
   buildPhase = args.buildPhase or ''
     runHook preBuild

@@ -1,7 +1,9 @@
-{ stdenvNoCC, callPackage, xmlstarlet, extraConfigure ? "" }: let
-  src = callPackage ../sources/bbb-freeswitch-core {};
+{ stdenvNoCC, callPackage, xmlstarlet, extraConfigure ? "" }:
+let
+  src = callPackage ../sources/bbb-freeswitch-core { };
 
-in stdenvNoCC.mkDerivation {
+in
+stdenvNoCC.mkDerivation {
   pname = "bbb-freeswitch-config";
   inherit (src) version;
 

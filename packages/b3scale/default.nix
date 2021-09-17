@@ -1,6 +1,8 @@
-{ fetchFromGitLab, buildGoModule, makeWrapper,
-  B3SCALE_DB_URL ? "user=b3scale host=/run/postgresql dbname=b3scale",
-  BBB_CONFIG ? "/run/bbb-web/bigbluebutton.properties"
+{ fetchFromGitLab
+, buildGoModule
+, makeWrapper
+, B3SCALE_DB_URL ? "user=b3scale host=/run/postgresql dbname=b3scale"
+, BBB_CONFIG ? "/run/bbb-web/bigbluebutton.properties"
 }:
 buildGoModule rec {
   pname = "b3scale";
