@@ -12,23 +12,30 @@
 
       nixpkgsFor = forAllSystems (system: import nixpkgs {
         inherit system;
-        overlays = [ self.overlay ];
+        overlays = [ self.overlay-flat ];
       });
     in
     {
-      overlay = final: prev: with prev;
-      let
-        mkOverlays = l: nixpkgs.lib.genAttrs l (e: callPackage (./packages + "/bbb-${e}") { });
-      in
-      {
+      overlay-flat = final: prev: with final; {
+        akkaApps = callPackage ./packages/bbb-akka-apps {};
+        akkaFsesl = callPackage ./packages/bbb-akka-fsesl {};
+        blankSlides = callPackage ./packages/bbb-blank-slides {};
+        etherpad-lite = callPackage ./packages/bbb-etherpad-lite {};
+        freeswitchConfig = callPackage ./packages/bbb-freeswitch-config {};
+        generateSecrets = callPackage ./packages/bbb-generate-secrets {};
+        greenlight = callPackage ./packages/bbb-greenlight {};
+        greenlight-bundle = callPackage ./packages/bbb-greenlight-bundle {};
         html5 = callPackage ./packages/bbb-html5/wrapper.nix { };
         html5-unwrapped = callPackage ./packages/bbb-html5 { };
+        recordAndPlaybackPresentation = callPackage ./packages/bbb-record-and-playback-presentation {};
+        web = callPackage ./packages/bbb-web {};
+        webrtcSfu = callPackage ./packages/bbb-webrtc-sfu {};
 
         kurento-media-server = callPackage ./packages/kurento-media-server {};
         kms-core = callPackage ./packages/kms-core {};
         kms-elements = callPackage ./packages/kms-elements {};
         kms-filters = callPackage ./packages/kms-filters {};
-        gst_all_1 = callPackage ./packages/kms-gst {};
+        kms-srtp = callPackage ./packages/libsrtp-kurento {};
 
         sofia_sip = callPackage ./packages/sofia-sip {};
         spandsp = callPackage ./packages/spandsp {};
@@ -43,49 +50,40 @@
 
         b3scale = callPackage ./packages/b3scale {};
         bbb-soffice-conversion-server = callPackage ./packages/bbb-soffice-conversion-server {};
-      } // mkOverlays [
-        "akka-apps"
-        "akka-fsesl"
-        "blank-slides"
-        "etherpad-lite"
-        "freeswitch-config"
-        "generate-secrets"
-        "greenlight"
-        "greenlight-bundle"
-        "record-and-playback-presentation"
-        "web"
-        "webrtc-sfu"
-      ];
+      };
 
       packages = forAllSystems (system: { inherit (nixpkgsFor.${system})
-        akka-apps
-        akka-fsesl
-        blank-slides
+        # bbbPackages
+        akkaApps
+        akkaFsesl
+        blankSlides
         etherpad-lite
-        freeswitch-config
-        generate-secrets
+        freeswitchConfig
+        generateSecrets
         greenlight
         greenlight-bundle
-        record-and-playback-presentation
-        web
-        webrtc-sfu
-
         html5
         html5-unwrapped
+        recordAndPlaybackPresentation
+        web
+        webrtcSfu
 
+        # kurentoPackages
         kurento-media-server
         kms-core
         kms-elements
         kms-filters
-        gst_all_1
+        kms-srtp
 
+        # freeswitchPackages
         sofia_sip
         spandsp
         freeswitch
         
         b3scale
         bbb-soffice-conversion-server
-        ; });
+        ;
+      });
 
       nixosModules.bbb = import ./modules;
     };
