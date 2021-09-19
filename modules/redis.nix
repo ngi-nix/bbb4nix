@@ -1,7 +1,8 @@
 { config, lib, ... }: with lib;
 let
   cfg = config.services.bigbluebutton.redis;
-in {
+in
+{
   options.services.bigbluebutton.redis = {
     enable = mkEnableOption "redis instance for BBB";
   };

@@ -10,7 +10,8 @@ let
   # This ensures that service defaults are overwritten, while
   # giving the administrator a chance to just override by assigning.
   mkDefaulter = mkOverride 999;
-in {
+in
+{
   options = {
     systemd.services = with types; mkOption {
       type = attrsOf (submodule ({ name, config, ... }: {

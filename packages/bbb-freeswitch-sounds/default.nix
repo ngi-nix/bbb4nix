@@ -1,7 +1,9 @@
-{ stdenvNoCC, callPackage }: let
-  src = callPackage ../sources/bbb-freeswitch-sounds {};
+{ stdenvNoCC, callPackage }:
+let
+  src = callPackage ../sources/bbb-freeswitch-sounds { };
 
-in stdenvNoCC.mkDerivation {
+in
+stdenvNoCC.mkDerivation {
   pname = "bbb-freeswitch-sounds";
   inherit (src) version;
 

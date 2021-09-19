@@ -8,7 +8,7 @@ stdenvNoCC.mkDerivation rec {
   dontBuild = true;
   dontFixup = true;
 
-  src = callPackage ./raw-source.nix {};
+  src = callPackage ./raw-source.nix { };
 
   patches = [
     # Allow receiving packets that are replayed

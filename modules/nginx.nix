@@ -3,13 +3,15 @@ let
   cfg = config.services.bigbluebutton.nginx;
   opts = options.services.bigbluebutton.nginx;
   definedAndNotNull = opt: opts."${opt}".isDefined && cfg."${opt}" != null;
-in {
+in
+{
   options.services.bigbluebutton.nginx = with types; let
     mkUrlOpt = name: mkOption {
       description = "URL for BigBlueButton ${name} upstream";
       type = nullOr str;
     };
-  in {
+  in
+  {
     enable = mkEnableOption "the nginx webserver config for BigBlueButton";
 
     domain = mkOption {
@@ -54,15 +56,17 @@ in {
 
   config = mkIf cfg.enable {
     # https://github.com/bigbluebutton/bigbluebutton/issues/9295
-    services.nginx.appendHttpConfig = let
-      v4 = filter (x: !(hasInfix ":" x)) cfg.freeswitchWs.ips;
-      v6 = filter (hasInfix ":") cfg.freeswitchWs.ips;
-    in mkIf opts.freeswitchWs.ips.isDefined ''
-      map $remote_addr $freeswitch_addr {
-        "~:"    [${head v6}];
-        default ${head v4};
-      }
-    '';
+    services.nginx.appendHttpConfig =
+      let
+        v4 = filter (x: !(hasInfix ":" x)) cfg.freeswitchWs.ips;
+        v6 = filter (hasInfix ":") cfg.freeswitchWs.ips;
+      in
+      mkIf opts.freeswitchWs.ips.isDefined ''
+        map $remote_addr $freeswitch_addr {
+          "~:"    [${head v6}];
+          default ${head v4};
+        }
+      '';
 
     services.nginx.proxyResolveWhileRunning = lib.mkForce false; # conflicts with "proxy_redirect default"
     services.nginx.virtualHosts."${cfg.virtualHost}" = {
@@ -281,6 +285,6 @@ in {
 
     # Group that is allowed to read recordings.
     # Will later be used for the record processes.
-    users.groups.bbb-record = {};
+    users.groups.bbb-record = { };
   };
 }

@@ -1,6 +1,7 @@
 { config, lib, ... }: with lib; let
   cfg = config.services.bigbluebutton.acme;
-in {
+in
+{
   options.services.bigbluebutton.acme = {
     enable = mkEnableOption "an ACME cert fo this BBB instance and configure it accordingly";
   };

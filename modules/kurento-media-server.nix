@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: with lib; let
   cfg = config.services.bigbluebutton.kurento-media-server;
-in {
+in
+{
   options.services.bigbluebutton.kurento-media-server = with types; {
     enable = mkEnableOption "Kurento Media Server and configure it for BigBlueButton";
 

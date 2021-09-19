@@ -3,14 +3,16 @@ let
   bbbLib = import ./lib.nix { inherit pkgs lib; };
   cfg = config.services.bigbluebutton.etherpad-lite;
 
-  settingsFile = pkgs.runCommand "etherpad-lite-settings.json" {
+  settingsFile = pkgs.runCommand "etherpad-lite-settings.json"
+    {
       defaultSettings = cfg.package + "/libexec/ep_etherpad-lite/deps/ep_etherpad-lite/settings.json";
     } ''
-      ${pkgs.gawk}/bin/awk -f ${./remove-comments.awk} "$defaultSettings" > default_no_comments.json
-      echo '${builtins.toJSON cfg.extraSettings}' > extra.json
-      ${pkgs.jq}/bin/jq -s '.[0] * .[1]' default_no_comments.json extra.json > "$out"
-    '';
-in {
+    ${pkgs.gawk}/bin/awk -f ${./remove-comments.awk} "$defaultSettings" > default_no_comments.json
+    echo '${builtins.toJSON cfg.extraSettings}' > extra.json
+    ${pkgs.jq}/bin/jq -s '.[0] * .[1]' default_no_comments.json extra.json > "$out"
+  '';
+in
+{
 
   options.services.bigbluebutton.etherpad-lite = with types; {
     enable = mkEnableOption "the BBB etherpad-lite service";
@@ -94,6 +96,6 @@ in {
       description = "BigBlueButton Etherpad Lite user";
       isSystemUser = true;
     };
-    users.groups.bbb-etherpad-lite = {};
+    users.groups.bbb-etherpad-lite = { };
   };
 }

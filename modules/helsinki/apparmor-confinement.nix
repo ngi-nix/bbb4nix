@@ -14,7 +14,7 @@
 
           packages = mkOption {
             type = listOf (either str package);
-            default = [];
+            default = [ ];
             description = "Stub option";
           };
 

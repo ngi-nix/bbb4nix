@@ -3,13 +3,14 @@
   bbbLib = import ./lib.nix { inherit pkgs lib; };
 
   configFile = bbbLib.mkHoconFile "bbb-akka-fsesl.conf" cfg.config;
-in {
+in
+{
   options.services.bigbluebutton.akka-fsesl = with types; {
     enable = mkEnableOption "the FSESL component";
 
     config = mkOption {
       description = "FSESL configuration. This will be merged with the configuration from /var/lib/secrets/bigbluebutton/bbb-akka-fsesl.conf.";
-      default = {};
+      default = { };
       type = bbbLib.hoconType;
     };
   };

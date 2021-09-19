@@ -1,12 +1,13 @@
 { mkYarnPackage, callPackage, fetchurl, phantomjs2 }:
 let
-  src = callPackage ../sources/bbb-etherpad-lite {};
+  src = callPackage ../sources/bbb-etherpad-lite { };
 
   settingsJson = fetchurl {
     url = "https://raw.githubusercontent.com/alangecker/bbb-packages/0e8842a05cca62d8d2e9d2ec037f7ff24e8d73be/bbb-etherpad/data/usr/share/etherpad-lite/settings.json";
     sha256 = "sha256-blvsVpdWsGNnYC7zf0q0S6kd0eDJv1Tv1l3+ow0Jh+o=";
   };
-in mkYarnPackage {
+in
+mkYarnPackage {
   pname = "bbb-etherpad-lite";
   src = "${src}/src";
   inherit (src) version;

@@ -3,12 +3,14 @@
 
   mkNo = cond: optionalString (!cond) "NO";
 
-  creationArgs = cfg': let
-    args = ""
-      + optionalString (cfg'.encoding != null) " ENCODING \"${cfg'.encoding}\""
-      + optionalString (cfg'.collate != null) " LC_COLLATE=\"${cfg'.collate}\""
-      + optionalString (cfg'.ctype != null) " LC_CTYPE=\"${cfg'.ctype}\"";
-  in if args != "" then "WITH ${args}" else "";
+  creationArgs = cfg':
+    let
+      args = ""
+        + optionalString (cfg'.encoding != null) " ENCODING \"${cfg'.encoding}\""
+        + optionalString (cfg'.collate != null) " LC_COLLATE=\"${cfg'.collate}\""
+        + optionalString (cfg'.ctype != null) " LC_CTYPE=\"${cfg'.ctype}\"";
+    in
+    if args != "" then "WITH ${args}" else "";
 
   ensureScript = pkgs.writeScript "postgresql-ensure" ''
     #!${pkgs.stdenv.shell}
@@ -88,7 +90,8 @@
     EOF
   '';
 
-in {
+in
+{
   options.helsinki.cooler-postgresql = with types; {
     enable = mkEnableOption "a cooler PostgreSQL module";
 
@@ -100,7 +103,7 @@ in {
     };
 
     ensureDatabases = mkOption {
-      default = {};
+      default = { };
       description = "Databases to create";
       type = attrsOf (submodule ({ name, ... }: {
         options = {
@@ -120,7 +123,7 @@ in {
           extensions = mkOption {
             type = listOf str;
             description = "Extensions to load";
-            default = [];
+            default = [ ];
           };
 
           encoding = mkOption {
@@ -147,14 +150,14 @@ in {
           roles = mkOption {
             type = listOf str;
             description = "Roles which are allowed to use this database";
-            default = [];
+            default = [ ];
           };
         };
       }));
     };
 
     ensureRoles = mkOption {
-      default = {};
+      default = { };
       description = "Roles to create";
       type = attrsOf (submodule ({ name, ... }: {
         options = {

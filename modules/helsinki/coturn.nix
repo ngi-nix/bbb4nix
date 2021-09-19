@@ -36,7 +36,8 @@ let
     ${lib.optionalString (cfg.cli-password != null) ("cli-password=${cfg.cli-password}")}
     ${cfg.extraConfig}
   '';
-in {
+in
+{
   options = {
     services.coturn = {
       enable = mkEnableOption "coturn TURN server";
@@ -89,7 +90,7 @@ in {
       };
       listening-ips = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "203.0.113.42" "2001:DB8::42" ];
         description = ''
           Listener IP addresses of relay server.
@@ -99,7 +100,7 @@ in {
       };
       relay-ips = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "203.0.113.42" "2001:DB8::42" ];
         description = ''
           Relay address (the local IP address that will be used to relay the
@@ -305,11 +306,13 @@ in {
 
   config = mkIf cfg.enable {
     users.users.turnserver =
-      { uid = config.ids.uids.turnserver;
+      {
+        uid = config.ids.uids.turnserver;
         description = "coturn TURN server user";
       };
     users.groups.turnserver =
-      { gid = config.ids.gids.turnserver;
+      {
+        gid = config.ids.gids.turnserver;
         members = [ "turnserver" ];
       };
 
@@ -337,13 +340,14 @@ in {
         User = "turnserver";
         Group = "turnserver";
         AmbientCapabilities =
-          mkIf (
-            cfg.listening-port < 1024 ||
-            cfg.alt-listening-port < 1024 ||
-            cfg.tls-listening-port < 1024 ||
-            cfg.alt-tls-listening-port < 1024 ||
-            cfg.min-port < 1024
-          ) "cap_net_bind_service";
+          mkIf
+            (
+              cfg.listening-port < 1024 ||
+              cfg.alt-listening-port < 1024 ||
+              cfg.tls-listening-port < 1024 ||
+              cfg.alt-tls-listening-port < 1024 ||
+              cfg.min-port < 1024
+            ) "cap_net_bind_service";
         Restart = "on-abort";
       };
     };

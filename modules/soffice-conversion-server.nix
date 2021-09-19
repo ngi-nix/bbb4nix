@@ -1,6 +1,8 @@
-{ lib, helsinkiLib, pkgs, config, ... }: let
+{ lib, helsinkiLib, pkgs, config, ... }:
+let
   cfg = config.services.bigbluebutton.soffice-conversion-server;
-in {
+in
+{
   options.services.bigbluebutton.soffice-conversion-server = {
     enable = lib.mkEnableOption "soffice conversion server";
   };
@@ -42,6 +44,6 @@ in {
     };
 
     users.users.bbb-soffice.isSystemUser = true;
-    users.groups.bbb-soffice = {};
+    users.groups.bbb-soffice = { };
   };
 }

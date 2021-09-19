@@ -1,11 +1,13 @@
-{ stdenvNoCC, lib, callPackage, cmake, jdk, maven, makeWrapper, pkgs, system }: let
+{ stdenvNoCC, lib, callPackage, cmake, jdk, maven, makeWrapper, pkgs, system }:
+let
   mvn2nix = import (callPackage ../sources/mvn2nix { }) { nixpkgs = pkgs.path; inherit system; };
   mavenRepository = mvn2nix.buildMavenRepositoryFromLockFile { file = ./dependencies.nix; };
 
-  src = callPackage ../sources/kurento-module-creator {};
+  src = callPackage ../sources/kurento-module-creator { };
 
   cmakeVersion = "cmake-" + lib.versions.majorMinor cmake.version;
-in stdenvNoCC.mkDerivation rec {
+in
+stdenvNoCC.mkDerivation rec {
   pname = "kurento-module-creator";
   inherit (src) version;
 

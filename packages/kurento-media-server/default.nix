@@ -1,9 +1,22 @@
-{ stdenv, lib, callPackage, makeWrapper, cmake, pkg-config
-, boost, glibmm, libsigcxx, libevent, openssl, websocketpp }: let
-  src = callPackage ../sources/kurento-media-server {};
-  gst = callPackage ../kms-gst {};
+{ stdenv
+, lib
+, callPackage
+, makeWrapper
+, cmake
+, pkg-config
+, boost
+, glibmm
+, libsigcxx
+, libevent
+, openssl
+, websocketpp
+}:
+let
+  src = callPackage ../sources/kurento-media-server { };
+  gst = callPackage ../kms-gst { };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "kurento-media-server";
   inherit (src) version;
 
@@ -19,14 +32,14 @@ in stdenv.mkDerivation {
     websocketpp
     gst.gstreamer
     gst.gst-plugins-base
-    (callPackage ../kms-core {})
-    (callPackage ../kms-jsonrpc {})
-    (callPackage ../kmsjsoncpp {})
+    (callPackage ../kms-core { })
+    (callPackage ../kms-jsonrpc { })
+    (callPackage ../kmsjsoncpp { })
   ];
-  cmakeFlagsArray = (callPackage ../kurento-media-server/lib.nix {}).mkCmakeModules [
-    (callPackage ../kms-cmake-utils {})
-    (callPackage ../kms-core {})
-    (callPackage ../kms-jsonrpc {})
+  cmakeFlagsArray = (callPackage ../kurento-media-server/lib.nix { }).mkCmakeModules [
+    (callPackage ../kms-cmake-utils { })
+    (callPackage ../kms-core { })
+    (callPackage ../kms-jsonrpc { })
     websocketpp
   ];
 

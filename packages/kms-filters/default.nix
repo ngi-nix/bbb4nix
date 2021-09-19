@@ -1,9 +1,21 @@
-{ stdenv, lib, callPackage, cmake, pkg-config
-, boost, glib, glibmm, libsigcxx, libsoup, opencv3 }: let
-  src = callPackage ../sources/kms-filters {};
-  gst = callPackage ../kms-gst {};
+{ stdenv
+, lib
+, callPackage
+, cmake
+, pkg-config
+, boost
+, glib
+, glibmm
+, libsigcxx
+, libsoup
+, opencv3
+}:
+let
+  src = callPackage ../sources/kms-filters { };
+  gst = callPackage ../kms-gst { };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "kms-filters";
   inherit (src) version;
 
@@ -27,7 +39,7 @@ in stdenv.mkDerivation {
     done
   '';
 
-  nativeBuildInputs = [ cmake pkg-config (callPackage ../kurento-module-creator {}) ];
+  nativeBuildInputs = [ cmake pkg-config (callPackage ../kurento-module-creator { }) ];
   buildInputs = [
     boost
     glibmm
@@ -36,18 +48,18 @@ in stdenv.mkDerivation {
     opencv3
     gst.gstreamer
     gst.gst-plugins-base
-    (callPackage ../kms-core {})
-    (callPackage ../kms-elements {})
-    (callPackage ../kms-jsonrpc {})
-    (callPackage ../kmsjsoncpp {})
+    (callPackage ../kms-core { })
+    (callPackage ../kms-elements { })
+    (callPackage ../kms-jsonrpc { })
+    (callPackage ../kmsjsoncpp { })
   ];
-  cmakeFlagsArray = (callPackage ../kurento-media-server/lib.nix {}).mkCmakeModules [
-    (callPackage ../kms-cmake-utils {})
-    (callPackage ../kms-core {})
-    (callPackage ../kms-elements {})
-    (callPackage ../kurento-module-creator {})
-    (callPackage ../kms-jsonrpc {})
-    (callPackage ../kmsjsoncpp {})
+  cmakeFlagsArray = (callPackage ../kurento-media-server/lib.nix { }).mkCmakeModules [
+    (callPackage ../kms-cmake-utils { })
+    (callPackage ../kms-core { })
+    (callPackage ../kms-elements { })
+    (callPackage ../kurento-module-creator { })
+    (callPackage ../kms-jsonrpc { })
+    (callPackage ../kmsjsoncpp { })
   ];
 
   # To find plugins missing their dependencies, run:

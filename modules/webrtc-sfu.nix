@@ -1,25 +1,29 @@
 { config, lib, pkgs, ... }: with lib; let
   cfg = config.services.bigbluebutton.webrtc-sfu;
-in {
+in
+{
   options.services.bigbluebutton.webrtc-sfu = with types; {
     enable = mkEnableOption "the WebRTC SFU component";
 
     config = mkOption {
       description = "Configuration to pass to WebRTC SFU";
-      default = {};
-      type = let
-        valueType = nullOr (oneOf [
-          bool
-          int
-          float
-          str
-          (lazyAttrsOf valueType)
-          (listOf valueType)
-        ]) // {
-          description = "Yaml value";
-          emptyValue.value = {};
-        };
-      in valueType;
+      default = { };
+      type =
+        let
+          valueType = nullOr
+            (oneOf [
+              bool
+              int
+              float
+              str
+              (lazyAttrsOf valueType)
+              (listOf valueType)
+            ]) // {
+            description = "Yaml value";
+            emptyValue.value = { };
+          };
+        in
+        valueType;
     };
 
     myIP = mkOption {
@@ -46,9 +50,9 @@ in {
           ip = "";
           url = "ws://127.0.0.1:${toString config.services.bigbluebutton.kurento-media-server.port}/kurento";
           ipClassMappings = {
-            local = {};
-            private = {};
-            public = {};
+            local = { };
+            private = { };
+            public = { };
           };
           options = {
             failAfter = 5;

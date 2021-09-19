@@ -1,6 +1,7 @@
 { config, lib, ... }: with lib; let
   cfg = config.services.bigbluebutton.coturn;
-in {
+in
+{
   options.services.bigbluebutton.coturn = {
     enable = mkEnableOption "the coturn STUN/TURN server and configure it for BigBlueButton";
   };
@@ -57,6 +58,6 @@ in {
       ];
     };
 
-    users.groups.bbb-turn = {};
+    users.groups.bbb-turn = { };
   };
 }

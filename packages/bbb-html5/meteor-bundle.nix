@@ -1,7 +1,9 @@
-{ stdenv, callPackage }: let
-  meteor = callPackage ../sources/meteor {};
-  src = callPackage ../sources/bigbluebutton {};
-in stdenv.mkDerivation {
+{ stdenv, callPackage }:
+let
+  meteor = callPackage ../sources/meteor { };
+  src = callPackage ../sources/bigbluebutton { };
+in
+stdenv.mkDerivation {
   inherit (src) version;
   pname = "bbb-html5-meteor-bundle";
   src = "${src}/bigbluebutton-html5";

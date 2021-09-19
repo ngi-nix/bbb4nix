@@ -3,19 +3,19 @@
 # the .m2 repository for Gradle usage.
 { callPackage }:
 let
-  sbtix = callPackage ../x2nix/sbtix.nix {};
+  sbtix = callPackage ../x2nix/sbtix.nix { };
 in
-  sbtix.buildSbtLibrary {
-    name = "commonMessage";
-    src = (callPackage ../sources/bigbluebutton {}) + "/bbb-common-message";
-    repo = [
-      (import ./repo.nix)
-      (import ./project-repo.nix)
-      (import ./manual-repo.nix)
-    ];
+sbtix.buildSbtLibrary {
+  name = "commonMessage";
+  src = (callPackage ../sources/bigbluebutton { }) + "/bbb-common-message";
+  repo = [
+    (import ./repo.nix)
+    (import ./project-repo.nix)
+    (import ./manual-repo.nix)
+  ];
 
-    postInstall = ''
-      sbt publish
-      cp -r /build/.m2/repository $out
-    '';
-  }
+  postInstall = ''
+    sbt publish
+    cp -r /build/.m2/repository $out
+  '';
+}

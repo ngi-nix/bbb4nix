@@ -1,7 +1,9 @@
-{ stdenv, lib, callPackage, cmake }: let
-  src = callPackage ../sources/kmsjsoncpp {};
+{ stdenv, lib, callPackage, cmake }:
+let
+  src = callPackage ../sources/kmsjsoncpp { };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   pname = "kmsjsoncpp";
   inherit (src) version;
 

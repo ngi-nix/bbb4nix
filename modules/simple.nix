@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: with lib; let
   cfg = config.services.bigbluebutton.simple;
-in {
+in
+{
   options.services.bigbluebutton.simple = with types; {
     enable = mkEnableOption "a simple one-node BigBlueButton installation";
 
@@ -13,7 +14,7 @@ in {
     ips = mkOption {
       description = "List of IP addresses this BigBlueButton is served on";
       type = listOf str;
-      default = [];
+      default = [ ];
       example = [ "1.1.1.1" "8.8.8.8" ];
     };
   };
@@ -27,14 +28,16 @@ in {
       };
       web = {
         enable = true;
-        config = let
-          clientLocation = ''''${bigbluebutton.web.serverURL}/html5client'';
-        in {
-          "bigbluebutton.web.serverURL" = "https://${cfg.domain}";
-          "defaultGuestWaitURL" = "${clientLocation}/guest-wait.html";
-          "defaultAvatarURL" = "${clientLocation}/avatar.png";
-          "defaultConfigURL" = "${clientLocation}/conf/config.xml";
-        };
+        config =
+          let
+            clientLocation = ''''${bigbluebutton.web.serverURL}/html5client'';
+          in
+          {
+            "bigbluebutton.web.serverURL" = "https://${cfg.domain}";
+            "defaultGuestWaitURL" = "${clientLocation}/guest-wait.html";
+            "defaultAvatarURL" = "${clientLocation}/avatar.png";
+            "defaultConfigURL" = "${clientLocation}/conf/config.xml";
+          };
         stunServers = [ "stun:${cfg.domain}" ];
         turnServers = [
           { url = "turn:${cfg.domain}?transport=tcp"; }

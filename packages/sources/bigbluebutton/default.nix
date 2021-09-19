@@ -4,7 +4,7 @@ stdenvNoCC.mkDerivation {
   pname = "bigbluebutton-source";
   version = builtins.readFile ./version;
 
-  src = callPackage ./raw-source.nix {};
+  src = callPackage ./raw-source.nix { };
 
   patches = [
     # Libraries
