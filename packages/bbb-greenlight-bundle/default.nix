@@ -1,8 +1,10 @@
-{ stdenvNoCC, lib, makeWrapper, bbbPackages }: let
+{ stdenvNoCC
+, lib
+, makeWrapper
+, greenlight
+}:
 
-  greenlight = bbbPackages.greenlight;
-
-in stdenvNoCC.mkDerivation {
+stdenvNoCC.mkDerivation {
   pname = "bbb-greenlight-bundle";
   inherit (greenlight) version;
 
